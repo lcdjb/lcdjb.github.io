@@ -1,0 +1,595 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Echarts,Ajax," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="博客断断续续搭了3，4天，今天才算熟悉怎么搞。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Echarts的后台数据获取">
+<meta property="og:url" content="http://panwg.me/2016/11/22/Echarts的后台数据获取/index.html">
+<meta property="og:site_name" content="PanWG">
+<meta property="og:description" content="博客断断续续搭了3，4天，今天才算熟悉怎么搞。">
+<meta property="og:image" content="http://oh18j8ea2.bkt.clouddn.com/0101.PNG">
+<meta property="og:image" content="http://oh18j8ea2.bkt.clouddn.com/0202.PNG">
+<meta property="og:updated_time" content="2016-11-22T09:50:34.256Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Echarts的后台数据获取">
+<meta name="twitter:description" content="博客断断续续搭了3，4天，今天才算熟悉怎么搞。">
+<meta name="twitter:image" content="http://oh18j8ea2.bkt.clouddn.com/0101.PNG">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"always"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://panwg.me/2016/11/22/Echarts的后台数据获取/"/>
+
+
+
+
+
+  <title> Echarts的后台数据获取 | PanWG </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">PanWG</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle">panwg1</p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="http://panwg.me/2016/11/22/Echarts的后台数据获取/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="panshuai">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/img/00.PNG">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="PanWG">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="PanWG" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                Echarts的后台数据获取
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2016-11-22T15:54:33+08:00">
+                2016-11-22
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>　　博客断断续续搭了3，4天，今天才算熟悉怎么搞。<a id="more"></a>弄好后总要写点什么，正好这段时间在用Echarts，也是从零开始一点点百度弄出来的，在这里贴点关键的代码吧。<br>　　最基本的那些就不多说了，网上全有，这里重点讲和后台数据的交互，毫无疑问用的是ajax。<br>　　<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div></pre></td><td class="code"><pre><div class="line">$.ajax(&#123;</div><div class="line">				 <span class="attr">type</span> : <span class="string">"post"</span>, </div><div class="line">				 <span class="attr">url</span> :<span class="string">"$&#123;ctx&#125;/monthStat/search"</span>,</div><div class="line">				 <span class="attr">data</span>:&#123;<span class="attr">starttime</span>:startTime2,<span class="attr">endtime</span>:endTime2&#125;,  <span class="comment">//根据时间段查询</span></div><div class="line">				 dataType : <span class="string">"json"</span>,</div><div class="line">				 <span class="attr">success</span>: <span class="function"><span class="keyword">function</span>(<span class="params">result</span>)</span>&#123;</div><div class="line">					 <span class="keyword">if</span> (result) &#123;  </div><div class="line">					 <span class="comment">//我是有折线图和饼图，options对应的是折线图，option1对应的是饼图</span></div><div class="line">					 <span class="comment">//折线图</span></div><div class="line">	                       options.legend.data = result.legend; <span class="comment">//result 是Controller返回的，下同</span></div><div class="line">	                       options.xAxis[<span class="number">0</span>].data = result.category; </div><div class="line">			       options.series[<span class="number">0</span>].data = result.series[<span class="number">0</span>].data; </div><div class="line">	                                          <span class="comment">//饼图</span></div><div class="line">	                    options1.legend.data= result.legend1;  </div><div class="line">	                    options1.xAxis[<span class="number">0</span>].data = result.category1; </div><div class="line">	                    options1.series[<span class="number">0</span>].data = result.series1[<span class="number">0</span>].data;</div><div class="line">	                    </div><div class="line">			    <span class="comment">//最后set下，就好了</span></div><div class="line">	                       myChart0.hideLoading();</div><div class="line">	                       myChart0.setOption(options); </div><div class="line">	                       </div><div class="line">	                       myChart1.hideLoading();</div><div class="line">	                      myChart1.setOption(options1); </div><div class="line">	                      </div><div class="line">	                    </div><div class="line">	                  &#125; </div><div class="line">				 &#125;,</div><div class="line">		                <span class="attr">error</span>:  <span class="function"><span class="keyword">function</span>(<span class="params">errorMsg</span>) </span>&#123; </div><div class="line">	                  alert(<span class="string">"不好意思，图表请求数据失败啦!"</span>); </div><div class="line">	                  myChart0.hideLoading(); </div><div class="line">	                  myChart1.hideLoading(); </div><div class="line">	                 </div><div class="line">	               &#125; &#125;);</div><div class="line">		       </div></pre></td></tr></table></figure></p>
+<p>　　下面是关键的后台代码。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@RequestMapping</span>(value = <span class="string">"search"</span>)</div><div class="line">	<span class="meta">@ResponseBody</span> <span class="comment">//这个注解不要忘了</span></div><div class="line">	<span class="function"><span class="keyword">public</span> EchartData <span class="title">loadCharts</span><span class="params">(@RequestParam(<span class="string">"starttime"</span>)</span> String starttime,</span></div><div class="line">			@<span class="title">RequestParam</span><span class="params">(<span class="string">"endtime"</span>)</span> String endtime) &#123;</div><div class="line">			<span class="comment">//。。。中间省去少许代码,service的查询，返回泛型为一个Entity的List。</span></div><div class="line">			<span class="comment">//。。。具体看你的数据吧，我只取了2个字段，一做图标的x轴，一个做y轴</span></div><div class="line"></div><div class="line">			<span class="comment">//一个Echarts表最基本的三个属性legend，category，series</span></div><div class="line">			List&lt;String&gt; legend = <span class="keyword">new</span> ArrayList&lt;String&gt;(</div><div class="line">			Arrays.asList(<span class="keyword">new</span> String[] &#123; <span class="string">"'访问次数'"</span> &#125;));</div><div class="line">			List&lt;String&gt; category = <span class="keyword">new</span> ArrayList&lt;String&gt;();<span class="comment">//x轴</span></div><div class="line">                        <span class="comment">//然后查询出来一个字段add到category里面</span></div><div class="line"></div><div class="line">			List&lt;Long&gt; ytemp = <span class="keyword">new</span> ArrayList&lt;Long&gt;();</div><div class="line">			<span class="comment">//然后另一个字段add到ytemp里面，注意ytemp这个集合要是Long型，一般都是数字型，y轴嘛</span></div><div class="line">			List&lt;Series&gt; series = <span class="keyword">new</span> ArrayList&lt;Series&gt;();<span class="comment">// y轴</span></div><div class="line">			series.add(<span class="keyword">new</span> Series(<span class="string">"访问次数"</span>, <span class="string">"line"</span>, ytemp));</div><div class="line">			<span class="comment">//以上代码获取的是折线图的，同样也能同时获取饼图的，我就叫legend1，category1，series1吧</span></div><div class="line">			EchartData data = <span class="keyword">new</span> EchartData(legend,legend1, category, category1, series, series1);<span class="comment">//构造器里自己定义</span></div><div class="line">		<span class="keyword">return</span> data;</div><div class="line">			&#125;</div><div class="line">			 </div></pre></td></tr></table></figure>
+<p>　　最后还要另外写个EchartData和Series的构造器。</p>
+<p><img src="http://oh18j8ea2.bkt.clouddn.com/0101.PNG" alt="01" title="折线图"><br><img src="http://oh18j8ea2.bkt.clouddn.com/0202.PNG" alt="02" title="饼图"><br>　　<br>　　还是挺方便简单的。</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Echarts/" rel="tag"># Echarts</a>
+          
+            <a href="/tags/Ajax/" rel="tag"># Ajax</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/11/22/Photos/" rel="next" title="Photos">
+                <i class="fa fa-chevron-left"></i> Photos
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+
+      <section class="site-overview sidebar-panel sidebar-panel-active">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/img/00.PNG"
+               alt="panshuai" />
+          <p class="site-author-name" itemprop="name">panshuai</p>
+          <p class="site-description motion-element" itemprop="description">Whatever is worth doing is worth doing well.</p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">4</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">4</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2016</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">panshuai</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+	
+
+
+
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+
+</body>
+</html>
